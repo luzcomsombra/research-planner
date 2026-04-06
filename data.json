@@ -50,6 +50,23 @@
       "category": "",
       "subcategory": "",
       "completedDate": ""
+    },
+    {
+      "id": "mnn661q557n6m",
+      "title": "Atheoretical Research",
+      "status": "ongoing",
+      "priority": 4,
+      "collaborators": "Tobias",
+      "deadline": "",
+      "target": "PoPS",
+      "difficulty": "Low",
+      "requirements": "",
+      "driveLink": "",
+      "description": "",
+      "notes": "",
+      "category": "",
+      "subcategory": "",
+      "completedDate": ""
     }
   ],
   "categories": []
