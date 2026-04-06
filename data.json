@@ -438,12 +438,13 @@
       "driveLink": "",
       "description": "",
       "notes": "",
-      "category": "",
+      "category": "Preprint",
       "subcategory": "",
       "completedDate": ""
     }
   ],
   "categories": [
-    "Published paper"
+    "Published paper",
+    "Preprint"
   ]
 }
