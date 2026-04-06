@@ -186,6 +186,23 @@
       "category": "",
       "subcategory": "",
       "completedDate": ""
+    },
+    {
+      "id": "mnnc2wundbraq",
+      "title": "Simulating Peer Review",
+      "status": "ongoing",
+      "priority": 8,
+      "collaborators": "",
+      "deadline": "",
+      "target": "",
+      "difficulty": "Moderate",
+      "requirements": "",
+      "driveLink": "",
+      "description": "--> Simulating Reviewer Bias\n--> Peer-reviewed vs preprints",
+      "notes": "",
+      "category": "",
+      "subcategory": "",
+      "completedDate": ""
     }
   ],
   "categories": []
