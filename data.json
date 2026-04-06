@@ -137,23 +137,6 @@
       "completedDate": ""
     },
     {
-      "id": "mnnc2wundbraq",
-      "title": "Simulating Peer Review",
-      "status": "ongoing",
-      "priority": 13,
-      "collaborators": "",
-      "deadline": "",
-      "target": "Nature",
-      "difficulty": "Moderate",
-      "requirements": "",
-      "driveLink": "",
-      "description": "--> Simulating Reviewer Bias\n--> Peer-reviewed vs preprints",
-      "notes": "",
-      "category": "",
-      "subcategory": "",
-      "completedDate": ""
-    },
-    {
       "id": "mnnc3u41j6bxr",
       "title": "Determining SESOI",
       "status": "not_started",
@@ -430,7 +413,7 @@
       "title": "Social Isolation Re-Analysis",
       "status": "ongoing",
       "priority": 19,
-      "collaborators": "MonÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©ger, Ijzerman etc",
+      "collaborators": "MonÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ©ger, Ijzerman etc",
       "deadline": "",
       "target": "",
       "difficulty": "Moderate",
