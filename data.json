@@ -254,6 +254,23 @@
       "category": "Manuscript",
       "subcategory": "Final text",
       "completedDate": ""
+    },
+    {
+      "id": "mnnje3lrbzwvl",
+      "title": "PhD - study 2",
+      "status": "not_started",
+      "priority": 10,
+      "collaborators": "",
+      "deadline": "",
+      "target": "",
+      "difficulty": "Moderate",
+      "requirements": "",
+      "driveLink": "",
+      "description": "",
+      "notes": "",
+      "category": "",
+      "subcategory": "",
+      "completedDate": ""
     }
   ],
   "categories": [
