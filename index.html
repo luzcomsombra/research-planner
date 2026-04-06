@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Research Planner</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>◈</text></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
@@ -32,8 +33,8 @@
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes slideIn { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-  /* Header */
   .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 20px; position: sticky; top: 0; z-index: 40; }
   .header-inner { max-width: 880px; margin: 0 auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .logo { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
@@ -44,10 +45,14 @@
   .btn-primary { padding: 8px 16px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius); font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
   .btn-primary:hover { opacity: 0.9; }
 
-  /* Main */
-  .main { max-width: 880px; margin: 0 auto; padding: 24px 20px 60px; }
+  .sync-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; white-space: nowrap; cursor: pointer; border: none; }
+  .sync-badge.synced { background: #3a7d5c20; color: var(--success); }
+  .sync-badge.syncing { background: #3d5a8020; color: var(--primary); animation: pulse 1.5s infinite; }
+  .sync-badge.error { background: #ef444420; color: var(--danger); }
+  .sync-badge.offline { background: var(--surface-alt); color: var(--text-dim); border: 1px solid var(--border); }
+  .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
-  /* Category Manager */
+  .main { max-width: 880px; margin: 0 auto; padding: 24px 20px 60px; }
   .cat-manager summary { font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; user-select: none; padding: 4px 0; }
   .cat-chips { display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 0 4px; align-items: center; }
   .cat-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 3px 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; color: var(--text-muted); }
@@ -55,7 +60,6 @@
   .cat-add { display: inline-flex; gap: 4px; }
   .cat-add input { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; width: 130px; background: var(--surface-alt); color: var(--text); }
 
-  /* Sections */
   .section { margin-bottom: 28px; }
   .section-header { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 0; user-select: none; }
   .section-arrow { font-size: 12px; color: var(--text-muted); transition: transform 0.2s; display: inline-block; }
@@ -64,7 +68,6 @@
   .section-count { font-size: 12px; font-weight: 600; color: var(--text-muted); background: var(--surface-alt); padding: 2px 10px; border-radius: 20px; border: 1px solid var(--border); }
   .section-spacer { flex: 1; }
 
-  /* Buttons */
   .btn-sm { padding: 5px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: 12px; cursor: pointer; color: var(--text-muted); font-weight: 600; }
   .btn-sm:hover { background: var(--surface-alt); }
   .btn-move { padding: 3px 10px; background: var(--surface-alt); border: 1px solid var(--border); border-radius: 6px; font-size: 11px; cursor: pointer; color: var(--text-muted); font-weight: 500; }
@@ -73,7 +76,6 @@
   .btn-icon:hover { background: var(--surface-alt); }
   .btn-mini { background: none; border: none; cursor: pointer; font-size: 9px; color: var(--text-muted); padding: 1px 3px; line-height: 1; }
 
-  /* Cards */
   .card { background: var(--surface); border-radius: var(--radius-lg); margin-bottom: 10px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: all 0.2s ease; }
   .card.dragging { opacity: 0.5; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
   .card.drag-over { border: 2px dashed var(--primary); transform: scale(1.01); }
@@ -97,7 +99,6 @@
   .tab-btn:not(.active) { background: var(--surface); color: var(--text-muted); }
   .card-textarea { width: 100%; min-height: 90px; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; color: var(--text); background: var(--surface-alt); resize: vertical; line-height: 1.6; }
 
-  /* Category group */
   .cat-group { margin-bottom: 12px; }
   .cat-group-header { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 0 6px; user-select: none; }
   .cat-group-arrow { font-size: 10px; color: var(--text-dim); transition: transform 0.15s; display: inline-block; }
@@ -106,13 +107,9 @@
   .cat-group-count { font-size: 11px; color: var(--text-dim); }
   .cat-group-items { margin-left: 12px; border-left: 2px solid var(--border); padding-left: 12px; }
 
-  /* Empty state */
   .empty { padding: 24px 16px; text-align: center; color: var(--text-dim); font-size: 13px; background: var(--surface-alt); border-radius: 10px; border: 1px dashed var(--border); }
-
-  /* Stats */
   .stats { margin-top: 20px; padding: 16px; background: var(--surface); border-radius: 10px; border: 1px solid var(--border); display: flex; gap: 20px; flex-wrap: wrap; font-size: 12px; color: var(--text-muted); }
 
-  /* Modal */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; backdrop-filter: blur(2px); }
   .modal { background: var(--surface); border-radius: var(--radius-xl); width: 100%; max-width: 540px; max-height: 90vh; overflow: auto; animation: slideIn 0.2s ease; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
   .modal-title { padding: 20px 24px 0; }
@@ -127,18 +124,31 @@
   .btn-cancel { background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); font-weight: 600; }
   .btn-save { background: var(--primary); border: none; color: #fff; font-weight: 700; }
 
-  /* Confirm delete */
   .confirm-popup { position: absolute; right: 0; top: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 50; width: 160px; text-align: center; }
   .confirm-popup p { margin: 0 0 8px; font-size: 12px; color: var(--text-muted); }
   .confirm-btns { display: flex; gap: 6px; }
   .confirm-btns button { flex: 1; }
   .btn-del-confirm { background: var(--danger); color: #fff; border: none; padding: 5px 12px; border-radius: var(--radius); font-size: 12px; cursor: pointer; font-weight: 600; }
 
-  /* Data bar */
+  .setup-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+  .setup-card { background: var(--surface); border-radius: var(--radius-xl); padding: 40px; max-width: 520px; width: 100%; box-shadow: 0 4px 24px rgba(0,0,0,0.06); border: 1px solid var(--border); }
+  .setup-card h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.03em; }
+  .setup-card .subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+  .setup-card .step { margin-bottom: 16px; }
+  .setup-card .step-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 11px; font-weight: 700; margin-right: 8px; vertical-align: middle; }
+  .setup-card .step-text { font-size: 13px; color: var(--text); line-height: 1.6; }
+  .setup-card .step-text a { color: var(--primary); }
+  .setup-card .step-text code { background: var(--surface-alt); padding: 1px 5px; border-radius: 4px; font-size: 12px; border: 1px solid var(--border); }
+  .setup-input { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px; background: var(--surface-alt); color: var(--text); margin: 12px 0; font-family: monospace; }
+  .setup-btn { width: 100%; padding: 12px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius); font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+  .setup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .setup-error { color: var(--danger); font-size: 12px; margin-top: 8px; }
+  .setup-skip { text-align: center; margin-top: 16px; }
+  .setup-skip button { background: none; border: none; color: var(--text-muted); font-size: 12px; cursor: pointer; text-decoration: underline; }
+
   .data-bar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
   .data-bar button { padding: 5px 12px; font-size: 11px; }
 
-  /* Responsive */
   @media (max-width: 600px) {
     .header-inner { gap: 8px; }
     .search-input { max-width: none; }
@@ -146,6 +156,7 @@
     .card-meta { gap: 8px; }
     .stats { gap: 12px; }
     .logo h1 { font-size: 15px; }
+    .setup-card { padding: 24px; }
   }
 </style>
 </head>
@@ -157,26 +168,100 @@
 <script type="text/babel">
 const { useState, useEffect, useCallback, useRef } = React;
 
-const DIFFICULTY_LEVELS = ["Very Low", "Low", "Moderate", "High", "Very High"];
-const DIFF_COLORS = { "Very Low": "#4ade80", "Low": "#86efac", "Moderate": "#fbbf24", "High": "#f97316", "Very High": "#ef4444" };
-const STATUS_OPTIONS = ["ongoing", "not_started", "completed"];
-const STATUS_LABELS = { ongoing: "Ongoing", not_started: "Not Yet Begun", completed: "Completed" };
-const SEC_COLORS = { ongoing: "var(--primary)", not_started: "var(--warning)", completed: "var(--success)" };
-const STORAGE_KEY = "research-planner-data";
+const DIFFICULTY_LEVELS = ["Very Low","Low","Moderate","High","Very High"];
+const DIFF_COLORS = {"Very Low":"#4ade80","Low":"#86efac","Moderate":"#fbbf24","High":"#f97316","Very High":"#ef4444"};
+const STATUS_OPTIONS = ["ongoing","not_started","completed"];
+const STATUS_LABELS = {ongoing:"Ongoing",not_started:"Not Yet Begun",completed:"Completed"};
+const SEC_COLORS = {ongoing:"var(--primary)",not_started:"var(--warning)",completed:"var(--success)"};
+const LS_KEY = "research-planner-data";
+const LS_TOKEN = "research-planner-gh-token";
+const LS_REPO = "research-planner-gh-repo";
+const DEFAULT_PROJECT = {id:"",title:"",status:"ongoing",priority:0,collaborators:"",deadline:"",target:"",difficulty:"Moderate",requirements:"",driveLink:"",description:"",notes:"",category:"",subcategory:"",completedDate:""};
+const genId = () => Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 
-const DEFAULT_PROJECT = { id:"", title:"", status:"ongoing", priority:0, collaborators:"", deadline:"", target:"", difficulty:"Moderate", requirements:"", driveLink:"", description:"", notes:"", category:"", subcategory:"", completedDate:"" };
-const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-
-function loadData() {
-  try { const d = localStorage.getItem(STORAGE_KEY); return d ? JSON.parse(d) : { projects: [], categories: [] }; }
-  catch { return { projects: [], categories: [] }; }
+function getRepoInfo() {
+  const stored = localStorage.getItem(LS_REPO);
+  if (stored) return JSON.parse(stored);
+  const h = window.location.hostname;
+  if (h.endsWith('.github.io')) {
+    const owner = h.split('.')[0];
+    const repo = window.location.pathname.split('/').filter(Boolean)[0];
+    if (owner && repo) { const info = {owner,repo}; localStorage.setItem(LS_REPO, JSON.stringify(info)); return info; }
+  }
+  return null;
 }
-function saveData(data) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) { console.error(e); }
+
+async function ghFetch(token, repoInfo) {
+  const resp = await fetch('https://api.github.com/repos/'+repoInfo.owner+'/'+repoInfo.repo+'/contents/data.json', {
+    headers: { 'Authorization': 'Bearer '+token, 'Accept': 'application/vnd.github.v3+json' }
+  });
+  if (resp.status === 404) return { content: null, sha: null };
+  if (!resp.ok) throw new Error('GitHub API '+resp.status);
+  const d = await resp.json();
+  return { content: JSON.parse(atob(d.content)), sha: d.sha };
+}
+
+async function ghSave(token, repoInfo, data, sha) {
+  const body = { message: 'Update planner data', content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))) };
+  if (sha) body.sha = sha;
+  const resp = await fetch('https://api.github.com/repos/'+repoInfo.owner+'/'+repoInfo.repo+'/contents/data.json', {
+    method: 'PUT',
+    headers: { 'Authorization': 'Bearer '+token, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!resp.ok) { const e = await resp.json(); throw new Error(e.message || 'GitHub API '+resp.status); }
+  const result = await resp.json();
+  return result.content.sha;
+}
+
+async function ghVerifyToken(token) {
+  const repoInfo = getRepoInfo();
+  if (!repoInfo) throw new Error("Could not detect repo info. Open this page from your GitHub Pages URL.");
+  const resp = await fetch('https://api.github.com/repos/'+repoInfo.owner+'/'+repoInfo.repo, {
+    headers: { 'Authorization': 'Bearer '+token }
+  });
+  if (!resp.ok) throw new Error("Token does not have access to this repo. Check permissions.");
+  return true;
+}
+
+function SetupScreen({ onComplete }) {
+  const [token, setToken] = useState("");
+  const [testing, setTesting] = useState(false);
+  const [error, setError] = useState("");
+  const handleConnect = async () => {
+    setTesting(true); setError("");
+    try {
+      await ghVerifyToken(token.trim());
+      localStorage.setItem(LS_TOKEN, token.trim());
+      onComplete(token.trim());
+    } catch (e) { setError(e.message || "Connection failed."); }
+    setTesting(false);
+  };
+  return (
+    <div className="setup-screen">
+      <div className="setup-card">
+        <div style={{fontSize:32,marginBottom:8}}>&#x25C8;</div>
+        <h1>Research Planner</h1>
+        <p className="subtitle">Set up cloud sync so your data stays in sync across all your devices.</p>
+        <div className="step"><span className="step-num">1</span><span className="step-text">Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">GitHub Token Settings</a> (opens in new tab)</span></div>
+        <div className="step"><span className="step-num">2</span><span className="step-text">Token name: anything (e.g. <code>planner-sync</code>). Expiration: <code>No expiration</code> (or your preference).</span></div>
+        <div className="step"><span className="step-num">3</span><span className="step-text">Under <b>Repository access</b>, select <b>Only select repositories</b>, then pick <code>research-planner</code>.</span></div>
+        <div className="step"><span className="step-num">4</span><span className="step-text">Under <b>Permissions &gt; Repository permissions</b>, set <b>Contents</b> to <b>Read and write</b>. Leave everything else as-is.</span></div>
+        <div className="step"><span className="step-num">5</span><span className="step-text">Click <b>Generate token</b>, copy the token, and paste it below.</span></div>
+        <input className="setup-input" type="password" value={token} onChange={e=>setToken(e.target.value)} placeholder="github_pat_xxxxxxxxxxxx..." onKeyDown={e=>e.key==="Enter"&&token.trim()&&handleConnect()} />
+        <button className="setup-btn" onClick={handleConnect} disabled={!token.trim()||testing}>{testing ? "Verifying..." : "Connect & Start"}</button>
+        {error && <p className="setup-error">{error}</p>}
+        <div className="setup-skip"><button onClick={()=>onComplete(null)}>Skip for now (local-only mode)</button></div>
+      </div>
+    </div>
+  );
 }
 
 function App() {
-  const [data, setData] = useState(() => loadData());
+  const [token, setToken] = useState(() => localStorage.getItem(LS_TOKEN));
+  const [needsSetup, setNeedsSetup] = useState(() => !localStorage.getItem(LS_TOKEN));
+  const [data, setData] = useState(() => { try { const d=localStorage.getItem(LS_KEY); return d?JSON.parse(d):{projects:[],categories:[]}; } catch{return{projects:[],categories:[]};} });
+  const [syncStatus, setSyncStatus] = useState(token ? "syncing" : "offline");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({...DEFAULT_PROJECT});
@@ -190,280 +275,211 @@ function App() {
   const [dragItem, setDragItem] = useState(null);
   const [dragOver, setDragOver] = useState(null);
   const [confirmDel, setConfirmDel] = useState(null);
+  const [showSettings, setShowSettings] = useState(false);
   const fileRef = useRef(null);
+  const shaRef = useRef(null);
+  const saveTimerRef = useRef(null);
+  const repoInfo = getRepoInfo();
 
-  const save = useCallback((nd) => { setData(nd); saveData(nd); }, []);
-  const uf = (f,v) => setForm(p => ({...p, [f]:v}));
+  useEffect(() => {
+    if (!token || !repoInfo) { setSyncStatus("offline"); return; }
+    (async () => {
+      setSyncStatus("syncing");
+      try {
+        const result = await ghFetch(token, repoInfo);
+        if (result.content) { setData(result.content); localStorage.setItem(LS_KEY, JSON.stringify(result.content)); shaRef.current = result.sha; }
+        setSyncStatus("synced");
+      } catch (e) { console.error("Fetch error:", e); setSyncStatus("error"); }
+    })();
+  }, [token]);
 
-  const openAdd = (status="ongoing") => {
-    const maxP = data.projects.filter(p=>p.status==="ongoing").reduce((m,p)=>Math.max(m,p.priority),0);
-    setForm({...DEFAULT_PROJECT, id:genId(), status, priority:maxP+1}); setEditingId(null); setModalOpen(true);
-  };
+  const save = useCallback((nd) => {
+    setData(nd);
+    localStorage.setItem(LS_KEY, JSON.stringify(nd));
+    if (!token || !repoInfo) return;
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    setSyncStatus("syncing");
+    saveTimerRef.current = setTimeout(async () => {
+      try {
+        try { const latest = await ghFetch(token, repoInfo); if (latest.sha) shaRef.current = latest.sha; } catch(e) {}
+        const newSha = await ghSave(token, repoInfo, nd, shaRef.current);
+        shaRef.current = newSha;
+        setSyncStatus("synced");
+      } catch (e) { console.error("Save error:", e); setSyncStatus("error"); }
+    }, 2000);
+  }, [token, repoInfo]);
+
+  const uf = (f,v) => setForm(p=>({...p,[f]:v}));
+  const openAdd = (status="ongoing") => { const maxP=data.projects.filter(p=>p.status==="ongoing").reduce((m,p)=>Math.max(m,p.priority),0); setForm({...DEFAULT_PROJECT,id:genId(),status,priority:maxP+1}); setEditingId(null); setModalOpen(true); };
   const openEdit = (proj) => { setForm({...proj}); setEditingId(proj.id); setModalOpen(true); };
   const saveProject = () => {
     if(!form.title.trim()) return;
     let np = editingId ? data.projects.map(p=>p.id===editingId?{...form}:p) : [...data.projects,{...form}];
-    let cats = [...data.categories];
-    if(form.category && !cats.includes(form.category)) cats.push(form.category);
+    let cats = [...data.categories]; if(form.category && !cats.includes(form.category)) cats.push(form.category);
     save({...data, projects:np, categories:cats}); setModalOpen(false);
   };
   const deleteProject = (id) => { save({...data, projects:data.projects.filter(p=>p.id!==id)}); setConfirmDel(null); };
   const moveProject = (id, ns) => {
-    const np = data.projects.map(p => {
-      if(p.id!==id) return p;
-      const u = {status:ns};
-      if(ns==="completed") u.completedDate=new Date().toISOString().split("T")[0];
-      if(ns==="ongoing") u.priority=data.projects.filter(pp=>pp.status==="ongoing").reduce((m,pp)=>Math.max(m,pp.priority),0)+1;
-      return {...p,...u};
-    });
+    const np = data.projects.map(p => { if(p.id!==id) return p; const u={status:ns}; if(ns==="completed") u.completedDate=new Date().toISOString().split("T")[0]; if(ns==="ongoing") u.priority=data.projects.filter(pp=>pp.status==="ongoing").reduce((m,pp)=>Math.max(m,pp.priority),0)+1; return{...p,...u}; });
     save({...data, projects:np});
   };
   const reorder = (id, dir) => {
-    const ong = data.projects.filter(p=>p.status==="ongoing").sort((a,b)=>a.priority-b.priority);
-    const idx = ong.findIndex(p=>p.id===id);
-    if((dir===-1&&idx===0)||(dir===1&&idx===ong.length-1)) return;
-    const sw = ong[idx+dir];
-    const np = data.projects.map(p => {
-      if(p.id===id) return {...p, priority:sw.priority};
-      if(p.id===sw.id) return {...p, priority:ong[idx].priority};
-      return p;
-    });
-    save({...data, projects:np});
+    const ong=data.projects.filter(p=>p.status==="ongoing").sort((a,b)=>a.priority-b.priority); const idx=ong.findIndex(p=>p.id===id);
+    if((dir===-1&&idx===0)||(dir===1&&idx===ong.length-1)) return; const sw=ong[idx+dir];
+    save({...data, projects:data.projects.map(p=>{ if(p.id===id) return{...p,priority:sw.priority}; if(p.id===sw.id) return{...p,priority:ong[idx].priority}; return p; })});
   };
-  const handleDragStart = (e,id) => { setDragItem(id); e.dataTransfer.effectAllowed="move"; };
-  const handleDragOver = (e,id) => { e.preventDefault(); setDragOver(id); };
-  const handleDrop = (e,tid) => {
-    e.preventDefault();
-    if(!dragItem||dragItem===tid){setDragItem(null);setDragOver(null);return;}
+  const handleDragStart=(e,id)=>{setDragItem(id);e.dataTransfer.effectAllowed="move";};
+  const handleDragOver=(e,id)=>{e.preventDefault();setDragOver(id);};
+  const handleDrop=(e,tid)=>{
+    e.preventDefault(); if(!dragItem||dragItem===tid){setDragItem(null);setDragOver(null);return;}
     const ong=data.projects.filter(p=>p.status==="ongoing").sort((a,b)=>a.priority-b.priority);
-    const fi=ong.findIndex(p=>p.id===dragItem), ti=ong.findIndex(p=>p.id===tid);
+    const fi=ong.findIndex(p=>p.id===dragItem),ti=ong.findIndex(p=>p.id===tid);
     if(fi===-1||ti===-1){setDragItem(null);setDragOver(null);return;}
-    const re=[...ong]; const [mv]=re.splice(fi,1); re.splice(ti,0,mv);
-    const map={}; re.forEach((p,i)=>{map[p.id]=i+1;});
-    save({...data, projects:data.projects.map(p=>map[p.id]!==undefined?{...p,priority:map[p.id]}:p)});
-    setDragItem(null); setDragOver(null);
+    const re=[...ong];const[mv]=re.splice(fi,1);re.splice(ti,0,mv);const map={};re.forEach((p,i)=>{map[p.id]=i+1;});
+    save({...data,projects:data.projects.map(p=>map[p.id]!==undefined?{...p,priority:map[p.id]}:p)});
+    setDragItem(null);setDragOver(null);
   };
-  const toggleExpand = (id) => { setExpanded(p=>({...p,[id]:!p[id]})); if(!activeTab[id]) setActiveTab(p=>({...p,[id]:"description"})); };
-  const updateField = (id,f,v) => { save({...data, projects:data.projects.map(p=>p.id===id?{...p,[f]:v}:p)}); };
-  const addCategory = () => { if(newCat.trim()&&!data.categories.includes(newCat.trim())) save({...data,categories:[...data.categories,newCat.trim()]}); setNewCat(""); };
-  const removeCategory = (c) => save({...data, categories:data.categories.filter(x=>x!==c)});
+  const toggleExpand=(id)=>{setExpanded(p=>({...p,[id]:!p[id]}));if(!activeTab[id])setActiveTab(p=>({...p,[id]:"description"}));};
+  const updateField=(id,f,v)=>{save({...data,projects:data.projects.map(p=>p.id===id?{...p,[f]:v}:p)});};
+  const addCategory=()=>{if(newCat.trim()&&!data.categories.includes(newCat.trim()))save({...data,categories:[...data.categories,newCat.trim()]});setNewCat("");};
+  const removeCategory=(c)=>save({...data,categories:data.categories.filter(x=>x!==c)});
+  const exportData=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download='research-planner-backup-'+new Date().toISOString().split("T")[0]+'.json';a.click();URL.revokeObjectURL(url);};
+  const importData=(e)=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=(ev)=>{try{const d=JSON.parse(ev.target.result);if(d.projects){save(d);alert("Data imported!");}else{alert("Invalid format.");}}catch{alert("Parse error.");}};reader.readAsText(file);e.target.value="";};
+  const manualSync = async () => { if(!token||!repoInfo)return; setSyncStatus("syncing"); try{ const r=await ghFetch(token,repoInfo); if(r.content){setData(r.content);localStorage.setItem(LS_KEY,JSON.stringify(r.content));shaRef.current=r.sha;} setSyncStatus("synced"); }catch(e){setSyncStatus("error");} };
+  const disconnectSync = () => { localStorage.removeItem(LS_TOKEN); setToken(null); setSyncStatus("offline"); setShowSettings(false); };
+  const reconnectSync = () => { setNeedsSetup(true); setShowSettings(false); };
 
-  const exportData = () => {
-    const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a"); a.href=url; a.download=`research-planner-backup-${new Date().toISOString().split("T")[0]}.json`; a.click();
-    URL.revokeObjectURL(url);
-  };
-  const importData = (e) => {
-    const file = e.target.files[0]; if(!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try { const d = JSON.parse(ev.target.result); if(d.projects) { save(d); alert("Data imported successfully!"); } else { alert("Invalid file format."); } }
-      catch { alert("Could not parse file."); }
-    };
-    reader.readAsText(file);
-    e.target.value = "";
-  };
-
-  const filteredProjects = (status) => {
-    let ps = data.projects.filter(p=>p.status===status);
-    if(search){ const s=search.toLowerCase(); ps=ps.filter(p=>p.title.toLowerCase().includes(s)||p.collaborators.toLowerCase().includes(s)||p.target.toLowerCase().includes(s)||p.category.toLowerCase().includes(s)); }
-    if(filterCat!=="all") ps=ps.filter(p=>p.category===filterCat);
-    if(status==="ongoing") ps.sort((a,b)=>a.priority-b.priority);
-    if(status==="completed") ps.sort((a,b)=>(b.completedDate||"").localeCompare(a.completedDate||""));
+  const filteredProjects=(status)=>{
+    let ps=data.projects.filter(p=>p.status===status);
+    if(search){const s=search.toLowerCase();ps=ps.filter(p=>p.title.toLowerCase().includes(s)||p.collaborators.toLowerCase().includes(s)||p.target.toLowerCase().includes(s)||p.category.toLowerCase().includes(s));}
+    if(filterCat!=="all")ps=ps.filter(p=>p.category===filterCat);
+    if(status==="ongoing")ps.sort((a,b)=>a.priority-b.priority);
+    if(status==="completed")ps.sort((a,b)=>(b.completedDate||"").localeCompare(a.completedDate||""));
     return ps;
   };
-  const groupByCategory = (projects) => {
-    const g={}; projects.forEach(p=>{const c=p.category||"Uncategorized"; if(!g[c])g[c]=[]; g[c].push(p);}); return g;
+  const groupByCategory=(projects)=>{const g={};projects.forEach(p=>{const c=p.category||"Uncategorized";if(!g[c])g[c]=[];g[c].push(p);});return g;};
+
+  if (needsSetup) return <SetupScreen onComplete={(t)=>{if(t)setToken(t);setNeedsSetup(false);}} />;
+
+  const renderCard=(proj,showPri,idx,total)=>{
+    const isExp=expanded[proj.id];const tab=activeTab[proj.id]||"description";const isDT=dragOver===proj.id&&dragItem!==proj.id;
+    return(<div key={proj.id} draggable={proj.status==="ongoing"} onDragStart={e=>handleDragStart(e,proj.id)} onDragOver={e=>handleDragOver(e,proj.id)} onDrop={e=>handleDrop(e,proj.id)} onDragEnd={()=>{setDragItem(null);setDragOver(null);}} className={'card'+(dragItem===proj.id?' dragging':'')+(isDT?' drag-over':'')} style={{cursor:proj.status==="ongoing"?"grab":"default"}}>
+      <div className="card-header">
+        {showPri&&(<div className="card-priority"><button className="btn-mini" onClick={()=>reorder(proj.id,-1)} disabled={idx===0} style={{opacity:idx===0?0.25:1}}>&#x25B2;</button><span className="card-priority-num">{idx+1}</span><button className="btn-mini" onClick={()=>reorder(proj.id,1)} disabled={idx===total-1} style={{opacity:idx===total-1?0.25:1}}>&#x25BC;</button></div>)}
+        <div className="card-body">
+          <div className="card-title-row">
+            <h3 className="card-title">{proj.title}</h3>
+            <span className="badge" style={{background:DIFF_COLORS[proj.difficulty]+"22",color:DIFF_COLORS[proj.difficulty],border:'1px solid '+DIFF_COLORS[proj.difficulty]+'44'}}>{proj.difficulty}</span>
+            {proj.category&&<span className="badge" style={{background:"var(--primary-light)",color:"var(--primary)",border:"1px solid #3d5a8030"}}>{proj.category}{proj.subcategory?' / '+proj.subcategory:""}</span>}
+            {proj.requirements&&<span className="badge" style={{background:"#ef444415",color:"var(--danger)",border:"1px solid #ef444430"}} title={proj.requirements}>&#x26A0; Needs: {proj.requirements.length>30?proj.requirements.slice(0,30)+"...":proj.requirements}</span>}
+          </div>
+          <div className="card-meta">
+            {proj.collaborators&&<span title="Collaborators">&#x1F465; {proj.collaborators}</span>}
+            {proj.deadline&&<span title="Deadline">&#x1F4C5; {proj.deadline}</span>}
+            {proj.target&&<span title="Target">&#x1F3AF; {proj.target}</span>}
+            {proj.driveLink&&<a href={proj.driveLink} target="_blank" rel="noopener noreferrer" title="Google Drive">&#x1F4C1; Drive</a>}
+            {proj.status==="completed"&&proj.completedDate&&<span>&#x2705; {proj.completedDate}</span>}
+          </div>
+        </div>
+        <div className="card-actions">
+          <button className="btn-icon" onClick={()=>toggleExpand(proj.id)} style={{transform:isExp?"rotate(180deg)":"rotate(0deg)",transition:"transform 0.2s"}} title="Expand">&#x25BE;</button>
+          <button className="btn-icon" onClick={()=>openEdit(proj)} title="Edit">&#x270E;</button>
+          <div style={{position:"relative"}}>
+            <button className="btn-icon" style={{color:"var(--danger)"}} onClick={()=>setConfirmDel(confirmDel===proj.id?null:proj.id)} title="Delete">&#x2715;</button>
+            {confirmDel===proj.id&&(<div className="confirm-popup"><p>Delete this project?</p><div className="confirm-btns"><button className="btn-sm" onClick={()=>setConfirmDel(null)}>Cancel</button><button className="btn-del-confirm" onClick={()=>deleteProject(proj.id)}>Delete</button></div></div>)}
+          </div>
+        </div>
+      </div>
+      <div className="card-moves">
+        {proj.status!=="ongoing"&&<button className="btn-move" onClick={()=>moveProject(proj.id,"ongoing")}>&rarr; Ongoing</button>}
+        {proj.status!=="not_started"&&<button className="btn-move" onClick={()=>moveProject(proj.id,"not_started")}>&rarr; Not Yet Begun</button>}
+        {proj.status!=="completed"&&<button className="btn-move" onClick={()=>moveProject(proj.id,"completed")}>&rarr; Completed</button>}
+      </div>
+      {isExp&&(<div className="card-expand">
+        <div className="tab-bar"><button className={'tab-btn'+(tab==="description"?' active':'')} onClick={()=>setActiveTab(p=>({...p,[proj.id]:"description"}))}>Description</button><button className={'tab-btn'+(tab==="notes"?' active':'')} onClick={()=>setActiveTab(p=>({...p,[proj.id]:"notes"}))}>Notes</button></div>
+        <textarea className="card-textarea" value={tab==="description"?proj.description:proj.notes} onChange={e=>updateField(proj.id,tab,e.target.value)} placeholder={tab==="description"?"Describe what this project is about...":"Add notes, reminders, next steps..."} />
+      </div>)}
+    </div>);
   };
 
-  const renderCard = (proj, showPri, idx, total) => {
-    const isExp = expanded[proj.id];
-    const tab = activeTab[proj.id]||"description";
-    const isDragTarget = dragOver===proj.id && dragItem!==proj.id;
-    return (
-      <div key={proj.id}
-        draggable={proj.status==="ongoing"}
-        onDragStart={e=>handleDragStart(e,proj.id)} onDragOver={e=>handleDragOver(e,proj.id)}
-        onDrop={e=>handleDrop(e,proj.id)} onDragEnd={()=>{setDragItem(null);setDragOver(null);}}
-        className={`card${dragItem===proj.id?" dragging":""}${isDragTarget?" drag-over":""}`}
-        style={{cursor:proj.status==="ongoing"?"grab":"default"}}>
-        <div className="card-header">
-          {showPri && (
-            <div className="card-priority">
-              <button className="btn-mini" onClick={()=>reorder(proj.id,-1)} disabled={idx===0} style={{opacity:idx===0?0.25:1}}>▲</button>
-              <span className="card-priority-num">{idx+1}</span>
-              <button className="btn-mini" onClick={()=>reorder(proj.id,1)} disabled={idx===total-1} style={{opacity:idx===total-1?0.25:1}}>▼</button>
-            </div>
-          )}
-          <div className="card-body">
-            <div className="card-title-row">
-              <h3 className="card-title">{proj.title}</h3>
-              <span className="badge" style={{background:DIFF_COLORS[proj.difficulty]+"22",color:DIFF_COLORS[proj.difficulty],border:`1px solid ${DIFF_COLORS[proj.difficulty]}44`}}>{proj.difficulty}</span>
-              {proj.category && <span className="badge" style={{background:"var(--primary-light)",color:"var(--primary)",border:"1px solid var(--primary)"+"30"}}>{proj.category}{proj.subcategory?` / ${proj.subcategory}`:""}</span>}
-              {proj.requirements && <span className="badge" style={{background:"#ef444415",color:"var(--danger)",border:"1px solid #ef444430"}} title={proj.requirements}>⚠ Needs: {proj.requirements.length>30?proj.requirements.slice(0,30)+"...":proj.requirements}</span>}
-            </div>
-            <div className="card-meta">
-              {proj.collaborators && <span title="Collaborators">👥 {proj.collaborators}</span>}
-              {proj.deadline && <span title="Deadline">📅 {proj.deadline}</span>}
-              {proj.target && <span title="Target">🎯 {proj.target}</span>}
-              {proj.driveLink && <a href={proj.driveLink} target="_blank" rel="noopener noreferrer" title="Google Drive">📁 Drive</a>}
-              {proj.status==="completed"&&proj.completedDate && <span>✅ {proj.completedDate}</span>}
-            </div>
-          </div>
-          <div className="card-actions">
-            <button className="btn-icon" onClick={()=>toggleExpand(proj.id)} style={{transform:isExp?"rotate(180deg)":"rotate(0deg)",transition:"transform 0.2s"}} title="Expand">▾</button>
-            <button className="btn-icon" onClick={()=>openEdit(proj)} title="Edit">✎</button>
-            <div style={{position:"relative"}}>
-              <button className="btn-icon" style={{color:"var(--danger)"}} onClick={()=>setConfirmDel(confirmDel===proj.id?null:proj.id)} title="Delete">✕</button>
-              {confirmDel===proj.id && (
-                <div className="confirm-popup">
-                  <p>Delete this project?</p>
-                  <div className="confirm-btns">
-                    <button className="btn-sm" onClick={()=>setConfirmDel(null)}>Cancel</button>
-                    <button className="btn-del-confirm" onClick={()=>deleteProject(proj.id)}>Delete</button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="card-moves">
-          {proj.status!=="ongoing" && <button className="btn-move" onClick={()=>moveProject(proj.id,"ongoing")}>→ Ongoing</button>}
-          {proj.status!=="not_started" && <button className="btn-move" onClick={()=>moveProject(proj.id,"not_started")}>→ Not Yet Begun</button>}
-          {proj.status!=="completed" && <button className="btn-move" onClick={()=>moveProject(proj.id,"completed")}>→ Completed</button>}
-        </div>
-        {isExp && (
-          <div className="card-expand">
-            <div className="tab-bar">
-              <button className={`tab-btn${tab==="description"?" active":""}`} onClick={()=>setActiveTab(p=>({...p,[proj.id]:"description"}))}>Description</button>
-              <button className={`tab-btn${tab==="notes"?" active":""}`} onClick={()=>setActiveTab(p=>({...p,[proj.id]:"notes"}))}>Notes</button>
-            </div>
-            <textarea className="card-textarea" value={tab==="description"?proj.description:proj.notes}
-              onChange={e=>updateField(proj.id,tab,e.target.value)}
-              placeholder={tab==="description"?"Describe what this project is about...":"Add notes, reminders, next steps..."} />
-          </div>
-        )}
+  const renderSection=(status,defaultOpen=true)=>{
+    const projects=filteredProjects(status);const isCol=collSections[status]??!defaultOpen;
+    const grouped=groupByCategory(projects);const catNames=Object.keys(grouped).sort((a,b)=>a==="Uncategorized"?1:b==="Uncategorized"?-1:a.localeCompare(b));
+    return(<div key={status} className="section">
+      <div className="section-header" onClick={()=>setCollSections(p=>({...p,[status]:!isCol}))}>
+        <span className={'section-arrow'+(isCol?' collapsed':'')}>&#x25BE;</span>
+        <h2 className="section-title" style={{color:SEC_COLORS[status]}}>{STATUS_LABELS[status]}</h2>
+        <span className="section-count">{projects.length}</span>
+        <div className="section-spacer"/>
+        <button className="btn-sm" onClick={e=>{e.stopPropagation();openAdd(status);}}>+ Add</button>
       </div>
-    );
+      {!isCol&&(<div>
+        {projects.length===0?<div className="empty">No projects here yet. Click "+ Add" to create one.</div>
+        :catNames.length===1&&catNames[0]==="Uncategorized"?projects.map((p,i)=>renderCard(p,status==="ongoing",i,projects.length))
+        :catNames.map(cat=>{const cp=grouped[cat];const ck=status+'-'+cat;const icc=collCats[ck];
+          return(<div key={cat} className="cat-group"><div className="cat-group-header" onClick={()=>setCollCats(p=>({...p,[ck]:!icc}))}><span className={'cat-group-arrow'+(icc?' collapsed':'')}>&#x25BE;</span><span className="cat-group-name">{cat}</span><span className="cat-group-count">({cp.length})</span></div>
+          {!icc&&<div className="cat-group-items">{cp.map((p,i)=>renderCard(p,status==="ongoing",i,cp.length))}</div>}</div>);
+        })}
+      </div>)}
+    </div>);
   };
 
-  const renderSection = (status, defaultOpen=true) => {
-    const projects = filteredProjects(status);
-    const isCol = collSections[status]??!defaultOpen;
-    const grouped = groupByCategory(projects);
-    const catNames = Object.keys(grouped).sort((a,b)=>a==="Uncategorized"?1:b==="Uncategorized"?-1:a.localeCompare(b));
-    return (
-      <div key={status} className="section">
-        <div className="section-header" onClick={()=>setCollSections(p=>({...p,[status]:!isCol}))}>
-          <span className={`section-arrow${isCol?" collapsed":""}`}>▾</span>
-          <h2 className="section-title" style={{color:SEC_COLORS[status]}}>{STATUS_LABELS[status]}</h2>
-          <span className="section-count">{projects.length}</span>
-          <div className="section-spacer" />
-          <button className="btn-sm" onClick={e=>{e.stopPropagation();openAdd(status);}}>+ Add</button>
-        </div>
-        {!isCol && (
-          <div>
-            {projects.length===0 ? <div className="empty">No projects here yet. Click "+ Add" to create one.</div>
-            : catNames.length===1&&catNames[0]==="Uncategorized" ? projects.map((p,i)=>renderCard(p,status==="ongoing",i,projects.length))
-            : catNames.map(cat=>{
-              const cp=grouped[cat]; const ck=`${status}-${cat}`; const icc=collCats[ck];
-              return (
-                <div key={cat} className="cat-group">
-                  <div className="cat-group-header" onClick={()=>setCollCats(p=>({...p,[ck]:!icc}))}>
-                    <span className={`cat-group-arrow${icc?" collapsed":""}`}>▾</span>
-                    <span className="cat-group-name">{cat}</span>
-                    <span className="cat-group-count">({cp.length})</span>
-                  </div>
-                  {!icc && <div className="cat-group-items">{cp.map((p,i)=>renderCard(p,status==="ongoing",i,cp.length))}</div>}
-                </div>
-              );
-            })}
-          </div>
-        )}
+  return(<div>
+    <div className="header"><div className="header-inner">
+      <div className="logo"><span className="logo-icon">&#x25C8;</span><h1>Research Planner</h1></div>
+      <input className="search-input" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search projects..."/>
+      <select className="filter-select" value={filterCat} onChange={e=>setFilterCat(e.target.value)}><option value="all">All Categories</option>{data.categories.map(c=><option key={c} value={c}>{c}</option>)}</select>
+      <div style={{position:"relative"}}>
+        <button className={'sync-badge '+syncStatus} onClick={()=>setShowSettings(!showSettings)} title="Sync settings">
+          <span className="sync-dot"/>{syncStatus==="synced"?"Synced":syncStatus==="syncing"?"Syncing...":syncStatus==="error"?"Sync error":"Local only"}
+        </button>
+        {showSettings&&(<div style={{position:"absolute",right:0,top:"110%",background:"var(--surface)",border:"1px solid var(--border)",borderRadius:10,padding:12,boxShadow:"0 4px 16px rgba(0,0,0,0.1)",zIndex:50,width:200,fontSize:12}}>
+          {token?(<><button className="btn-sm" style={{width:"100%",marginBottom:6}} onClick={()=>{manualSync();setShowSettings(false);}}>&#x21BB; Refresh from cloud</button><button className="btn-sm" style={{width:"100%",color:"var(--danger)"}} onClick={disconnectSync}>Disconnect sync</button></>)
+          :(<button className="btn-sm" style={{width:"100%"}} onClick={reconnectSync}>Set up cloud sync</button>)}
+        </div>)}
       </div>
-    );
-  };
-
-  return (
-    <div>
-      <div className="header">
-        <div className="header-inner">
-          <div className="logo"><span className="logo-icon">◈</span><h1>Research Planner</h1></div>
-          <input className="search-input" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search projects..." />
-          <select className="filter-select" value={filterCat} onChange={e=>setFilterCat(e.target.value)}>
-            <option value="all">All Categories</option>
-            {data.categories.map(c=><option key={c} value={c}>{c}</option>)}
-          </select>
-          <button className="btn-primary" onClick={()=>openAdd("ongoing")}>+ New Project</button>
-        </div>
+      <button className="btn-primary" onClick={()=>openAdd("ongoing")}>+ New Project</button>
+    </div></div>
+    <div className="main">
+      <div className="data-bar">
+        <button className="btn-sm" onClick={exportData}>&#x2B07; Export Backup</button>
+        <button className="btn-sm" onClick={()=>fileRef.current?.click()}>&#x2B06; Import Backup</button>
+        <input ref={fileRef} type="file" accept=".json" onChange={importData} style={{display:"none"}}/>
       </div>
-      <div className="main">
-        {/* Data management bar */}
-        <div className="data-bar">
-          <button className="btn-sm" onClick={exportData}>⬇ Export Data</button>
-          <button className="btn-sm" onClick={()=>fileRef.current?.click()}>⬆ Import Data</button>
-          <input ref={fileRef} type="file" accept=".json" onChange={importData} style={{display:"none"}} />
-          <span style={{fontSize:11,color:"var(--text-dim)"}}>Export/import to sync between devices</span>
-        </div>
-        {/* Categories */}
-        <details className="cat-manager" style={{marginBottom:20}}>
-          <summary>Manage Categories</summary>
-          <div className="cat-chips">
-            {data.categories.map(c=>(<span key={c} className="cat-chip">{c} <button onClick={()=>removeCategory(c)}>✕</button></span>))}
-            <div className="cat-add">
-              <input value={newCat} onChange={e=>setNewCat(e.target.value)} onKeyDown={e=>e.key==="Enter"&&addCategory()} placeholder="New category..." />
-              <button className="btn-sm" onClick={addCategory}>Add</button>
-            </div>
-          </div>
-        </details>
-        {renderSection("ongoing",true)}
-        {renderSection("not_started",true)}
-        {renderSection("completed",false)}
-        <div className="stats">
-          <span><strong style={{color:"var(--primary)"}}>{data.projects.filter(p=>p.status==="ongoing").length}</strong> ongoing</span>
-          <span><strong style={{color:"var(--warning)"}}>{data.projects.filter(p=>p.status==="not_started").length}</strong> planned</span>
-          <span><strong style={{color:"var(--success)"}}>{data.projects.filter(p=>p.status==="completed").length}</strong> completed</span>
-          <span><strong>{data.projects.length}</strong> total</span>
-        </div>
+      <details className="cat-manager" style={{marginBottom:20}}><summary>Manage Categories</summary>
+        <div className="cat-chips">{data.categories.map(c=>(<span key={c} className="cat-chip">{c} <button onClick={()=>removeCategory(c)}>&#x2715;</button></span>))}
+        <div className="cat-add"><input value={newCat} onChange={e=>setNewCat(e.target.value)} onKeyDown={e=>e.key==="Enter"&&addCategory()} placeholder="New category..."/><button className="btn-sm" onClick={addCategory}>Add</button></div></div>
+      </details>
+      {renderSection("ongoing",true)}
+      {renderSection("not_started",true)}
+      {renderSection("completed",false)}
+      <div className="stats">
+        <span><strong style={{color:"var(--primary)"}}>{data.projects.filter(p=>p.status==="ongoing").length}</strong> ongoing</span>
+        <span><strong style={{color:"var(--warning)"}}>{data.projects.filter(p=>p.status==="not_started").length}</strong> planned</span>
+        <span><strong style={{color:"var(--success)"}}>{data.projects.filter(p=>p.status==="completed").length}</strong> completed</span>
+        <span><strong>{data.projects.length}</strong> total</span>
       </div>
-      {/* Modal */}
-      {modalOpen && (
-        <div className="modal-overlay" onClick={e=>{if(e.target===e.currentTarget)setModalOpen(false);}}>
-          <div className="modal">
-            <div className="modal-title"><h2>{editingId?"Edit Project":"New Project"}</h2></div>
-            <div className="modal-body">
-              <div className="field"><label>Project Title *</label><input value={form.title} onChange={e=>uf("title",e.target.value)} placeholder="e.g., VVG Priming Study Meta-Analysis" /></div>
-              <div className="field-row">
-                <div className="field"><label>Status</label><select value={form.status} onChange={e=>uf("status",e.target.value)}>{STATUS_OPTIONS.map(s=><option key={s} value={s}>{STATUS_LABELS[s]}</option>)}</select></div>
-                <div className="field"><label>Difficulty</label><select value={form.difficulty} onChange={e=>uf("difficulty",e.target.value)}>{DIFFICULTY_LEVELS.map(d=><option key={d} value={d}>{d}</option>)}</select></div>
-              </div>
-              <div className="field-row">
-                <div className="field"><label>Category</label><input list="catlist" value={form.category} onChange={e=>uf("category",e.target.value)} placeholder="e.g., Manuscripts" /><datalist id="catlist">{data.categories.map(c=><option key={c} value={c}/>)}</datalist></div>
-                <div className="field"><label>Subcategory</label><input value={form.subcategory} onChange={e=>uf("subcategory",e.target.value)} placeholder="e.g., In Preparation" /></div>
-              </div>
-              <div className="field"><label>Collaborators</label><input value={form.collaborators} onChange={e=>uf("collaborators",e.target.value)} placeholder="e.g., John, Maria, Ahmed" /></div>
-              <div className="field-row">
-                <div className="field"><label>Deadline</label><input type="date" value={form.deadline} onChange={e=>uf("deadline",e.target.value)} /></div>
-                <div className="field"><label>Target (Journal / Grant)</label><input value={form.target} onChange={e=>uf("target",e.target.value)} placeholder="e.g., JPSP, ERC Starting" /></div>
-              </div>
-              <div className="field"><label>Requirements (things you still need)</label><input value={form.requirements} onChange={e=>uf("requirements",e.target.value)} placeholder="e.g., Mplus license, IRB approval" /></div>
-              <div className="field"><label>Google Drive Link</label><input value={form.driveLink} onChange={e=>uf("driveLink",e.target.value)} placeholder="https://drive.google.com/..." /></div>
-              <div className="field"><label>Description</label><textarea value={form.description} onChange={e=>uf("description",e.target.value)} placeholder="What is this project about?" /></div>
-              <div className="field"><label>Notes</label><textarea value={form.notes} onChange={e=>uf("notes",e.target.value)} placeholder="Any notes, reminders, to-dos..." /></div>
-              <div className="modal-actions">
-                <button className="btn-cancel" onClick={()=>setModalOpen(false)}>Cancel</button>
-                <button className="btn-save" onClick={saveProject}>{editingId?"Save Changes":"Create Project"}</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
-  );
+    {modalOpen&&(<div className="modal-overlay" onClick={e=>{if(e.target===e.currentTarget)setModalOpen(false);}}>
+      <div className="modal"><div className="modal-title"><h2>{editingId?"Edit Project":"New Project"}</h2></div>
+        <div className="modal-body">
+          <div className="field"><label>Project Title *</label><input value={form.title} onChange={e=>uf("title",e.target.value)} placeholder="e.g., VVG Priming Study Meta-Analysis"/></div>
+          <div className="field-row"><div className="field"><label>Status</label><select value={form.status} onChange={e=>uf("status",e.target.value)}>{STATUS_OPTIONS.map(s=><option key={s} value={s}>{STATUS_LABELS[s]}</option>)}</select></div><div className="field"><label>Difficulty</label><select value={form.difficulty} onChange={e=>uf("difficulty",e.target.value)}>{DIFFICULTY_LEVELS.map(d=><option key={d} value={d}>{d}</option>)}</select></div></div>
+          <div className="field-row"><div className="field"><label>Category</label><input list="catlist" value={form.category} onChange={e=>uf("category",e.target.value)} placeholder="e.g., Manuscripts"/><datalist id="catlist">{data.categories.map(c=><option key={c} value={c}/>)}</datalist></div><div className="field"><label>Subcategory</label><input value={form.subcategory} onChange={e=>uf("subcategory",e.target.value)} placeholder="e.g., In Preparation"/></div></div>
+          <div className="field"><label>Collaborators</label><input value={form.collaborators} onChange={e=>uf("collaborators",e.target.value)} placeholder="e.g., John, Maria, Ahmed"/></div>
+          <div className="field-row"><div className="field"><label>Deadline</label><input type="date" value={form.deadline} onChange={e=>uf("deadline",e.target.value)}/></div><div className="field"><label>Target (Journal / Grant)</label><input value={form.target} onChange={e=>uf("target",e.target.value)} placeholder="e.g., JPSP, ERC Starting"/></div></div>
+          <div className="field"><label>Requirements (things you still need)</label><input value={form.requirements} onChange={e=>uf("requirements",e.target.value)} placeholder="e.g., Mplus license, IRB approval"/></div>
+          <div className="field"><label>Google Drive Link</label><input value={form.driveLink} onChange={e=>uf("driveLink",e.target.value)} placeholder="https://drive.google.com/..."/></div>
+          <div className="field"><label>Description</label><textarea value={form.description} onChange={e=>uf("description",e.target.value)} placeholder="What is this project about?"/></div>
+          <div className="field"><label>Notes</label><textarea value={form.notes} onChange={e=>uf("notes",e.target.value)} placeholder="Any notes, reminders, to-dos..."/></div>
+          <div className="modal-actions"><button className="btn-cancel" onClick={()=>setModalOpen(false)}>Cancel</button><button className="btn-save" onClick={saveProject}>{editingId?"Save Changes":"Create Project"}</button></div>
+        </div>
+      </div>
+    </div>)}
+  </div>);
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>
 </body>
 </html>
