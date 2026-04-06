@@ -135,6 +135,23 @@
       "category": "",
       "subcategory": "",
       "completedDate": ""
+    },
+    {
+      "id": "mnnc0n37gphcq",
+      "title": "Steam Study",
+      "status": "ongoing",
+      "priority": 6,
+      "collaborators": "Tobias",
+      "deadline": "",
+      "target": "",
+      "difficulty": "Moderate",
+      "requirements": "Steam data + analysis Nico",
+      "driveLink": "",
+      "description": "",
+      "notes": "",
+      "category": "",
+      "subcategory": "",
+      "completedDate": ""
     }
   ],
   "categories": []
